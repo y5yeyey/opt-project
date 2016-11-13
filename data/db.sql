@@ -1,1 +1,1 @@
-create database talkingdata;
+CREATE database IF NOT EXISTS talkingdata;

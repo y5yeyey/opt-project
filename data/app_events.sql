@@ -3,11 +3,10 @@ DROP TABLE IF EXISTS `app_events`;
 
         CREATE TABLE IF NOT EXISTS `app_events` (
             `app_events_id` INT NOT NULL AUTO_INCREMENT,
-`events_id` INT NOT NULL,
-`device_id` BIGINT NOT NULL,
-`timestamp` DATETIME NOT NULL,
-`longitude` VARCHAR(10) NOT NULL,
-`latitude` VARCHAR(10) NOT NULL,
+`app_id` INT NOT NULL,
+`event_id` BIGINT NOT NULL,
+`is_installed` VARCHAR(10) NOT NULL,
+`is_active` VARCHAR(10) NOT NULL,
 PRIMARY KEY (app_events_id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
     
@@ -18,5 +17,5 @@ PRIMARY KEY (app_events_id)
         ENCLOSED BY '"'
         LINES TERMINATED BY '\n'
         IGNORE 1 LINES
-        (`events_id`, `device_id`, `timestamp`, `longitude`, `latitude`);
+        (`app_id`, `event_id`, `is_installed`, `is_active`);
     

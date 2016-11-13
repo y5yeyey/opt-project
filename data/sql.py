@@ -60,17 +60,15 @@ def app_events(name):
     fields = {
         "keys": [
             "app_events_id",
-            "events_id",
-            "device_id",
-            "timestamp",
-            "longitude",
-            "latitude"
+            "app_id",
+            "event_id",
+            "is_installed",
+            "is_active"
         ],
         "attributes": [
             "INT NOT NULL AUTO_INCREMENT",
             "INT NOT NULL",
             "BIGINT NOT NULL",
-            "DATETIME NOT NULL",
             "VARCHAR(10) NOT NULL",
             "VARCHAR(10) NOT NULL"
         ]
