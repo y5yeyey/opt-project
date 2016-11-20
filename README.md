@@ -9,6 +9,8 @@ This site is for the final project of Optimization class (CS 268). The goal is t
 Also, for the purpose of data engineering, all csv data was imported into MySQL. There are six major tables providing user demographics data. Largest table `app_events` has more than 32,000,000 rows. 
 
 
+### Timeline and Roadmap
+See [here](https://docs.google.com/a/uci.edu/document/d/1xQiWP9X7VLAKUyM-ZTwjswcypflQY--bUXnz1qTLpI0/edit?usp=sharing) on Google Doc.
 
 
 ### Environmental Settings
@@ -50,7 +52,7 @@ Run
 $ ./load_data.sh
 ```
 
-to complete the loading process. If the password for `root` user is not empty, then you would need to change the `load_data.sh` script to make it work. Basically, the `load_data.sh` first run `sql.py` to generate `.sql` scripts for each of the `.csv` data files (any existed `.sql` will be overwrote), then run `.sql` scripts one by one. The whole process probably cost 5 mins to finish.
+to complete the loading process. If the password for `root` user is not empty, then you will need to change the `load_data.sh` script manually to make it work. Basically, the `load_data.sh` first run `sql.py` to generate `.sql` scripts for each of the `.csv` data files (any existed `.sql` will be overwrote), then run `.sql` scripts one by one. The whole process probably cost five mins to finish.
 
 
 ### Test
@@ -61,7 +63,7 @@ To test a MySQL interface, run
 $ python test.py
 ```
 
-You can modify the connection settings in `test.py`, which is
+You can modify the connection settings in `test.py`, which is defined as
 
 ```
 test = {
