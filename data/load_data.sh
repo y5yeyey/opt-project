@@ -2,7 +2,7 @@
 
 python sql.py
 
-mysql -u"root" "talkingdata" < db.sql
+mysql -u"root" < db.sql
 mysql -u"root" "talkingdata" < app_events.sql
 mysql -u"root" "talkingdata" < app_labels.sql
 mysql -u"root" "talkingdata" < events.sql
