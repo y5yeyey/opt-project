@@ -9,9 +9,9 @@ class SvmClassifier(object):
         """
         """
 
-    def transform(self, X, Y):
+    def parse(self, X, Y):
         """
-        transform array data into libsvm style
+        parser array data into libsvm style
         """
         prob_y = []
         prob_x = []
@@ -21,7 +21,7 @@ class SvmClassifier(object):
                 xi[int(j + 1)] = float(X[i][j])
             prob_y += [float(Y[i])]
             prob_x += [xi]
-        return (prob_y, prob_x)
+        return (prob_x, prob_y)
 
     def train(self, X, Y, options=None):
         """
@@ -32,7 +32,11 @@ class SvmClassifier(object):
 
     def predict(self, Xte, Yte, m):
         p_label, p_acc, p_val = svm_predict(Yte, Xte, m)
-        return p_acc[0];
+        res = {}
+        res['acc'] = 0.1
+        res['auc'] = 0.2
+        res['err'] = 0
+        return res;
 
     def roc(self):
         pass
@@ -40,14 +44,16 @@ class SvmClassifier(object):
     def auc(self):
         pass
 
+    def err(self):
+        pass
+
 
 svm = SvmClassifier()
 
-Y = [0,1,0,1]
-X = [[1,2,3,4],[2,3,4,5],[1,2,4,5],[1,2,6,5]]
-
-prob_y, prob_x = svm.transform(X, Y)
-# print isinstance(prob_x, (list, tuple))
+Y = [0, 1, 0, 1]
+X = [[1, 2, 3, 4], [2, 3, 4, 5], [1, 2, 4, 5], [1, 2, 6, 5]]
+prob_x, prob_y = svm.transform(X, Y)
+print isinstance(prob_x, (list, tuple))
 m = svm.train(prob_y[:3], prob_x[:3], '-c 4')
 # print prob_x[3:]
 # predict = svm.predict(prob_y, prob_x, m)

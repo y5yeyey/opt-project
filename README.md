@@ -48,8 +48,15 @@ The `main.py` is responsible for controlling the data flow (input dataset in `.c
 Visualizations (and all preprocessing steps) are in `R`.Results are consisted of a `.csv` dataset and plots. Data flows in `.csv` files between `Python` and `R`.
 
 ##### Algorithm
-Algorithms include Genetic Algorithm (GA) and Support Vector Machine (SVM), provided by `ga.py` and `svm.py` respectively. GA is a function giving a subset of features, and pass the subset to the model fitter SVM. Each simulation calls GA and SVM iteratively to get simulation results. 
+Algorithms include Genetic Algorithm (GA) and Support Vector Machine (SVM), provided by `ga.py` and `svm.py` respectively. GA is a function giving a subset of features, and pass the subset to the model fitter SVM. Each simulation calls GA and SVM iteratively to get simulation results.
+We implement svm.py by extending libsvm. svm.py provides functions includes: parse, train, predict, roc, auc, and err. Users can use the svm model based on the following steps:
+
+1. parse data into libsvm style
+2. call train function to get trained model
+3. invoke predict function to make predicatios
+4. performance analysis
 
 ##### Analyzer
 Analyzer provides an overall performance analysis on the simulation. Analyzer can be either in `R` or `Python`. If the analyzer is implemented in `R`, then `.csv` file should be loaded. If the analyzer is a `.py` file, then it will be called in the `main.py`.
+
 
