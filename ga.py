@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import division
 import pandas as pd
-import numpy as np
 from random import random
 
 GROUP = [
@@ -10,6 +10,13 @@ GROUP = [
 ]
 GROUP_MAP = {e: i+1 for i, e in enumerate(GROUP)}
 
+GA_PARA = {
+    "POPULATION_SIZE": 20,
+    "GENERATION_MAX": 9,
+    "FITNESS_ERROR": 0.5,
+    "PR_CROSSOVER": 0.05,
+    "PR_MUTATE": 0.01
+}
 
 class Population(object):
 
@@ -18,14 +25,17 @@ class Population(object):
         Initialized the finalized dataset
         :param df: DataFrame
         """
-        self._size = 20
-        self._gen_max = 9
-        self._gen_num = 0
+        self._size = GA_PARA["POPULATION_SIZE"]
         self.df = df
         self._subset = [
             map(lambda x: 1 if x > 0.5 else 0, [random() for _ in range(len(self.df.columns))]) \
             for _ in range(self._size) \
         ]
+        self._gen_max = GA_PARA["GENERATION_MAX"]
+        self._gen_num = 0
+        self.cost = lambda one_subset: sum(one_subset)
+        self.fitness = lambda one_subset, accuracy: accuracy - self.cost(one_subset) / (accuracy + 1) + len(one_subset)
+        self.fitness_opt = GA_PARA["FITNESS_ERROR"]
 
     def active(self):
         return len(self._subset) != 0
@@ -43,21 +53,20 @@ class Population(object):
             return (pd.DataFrame(self.df, columns=each) for each in feature_cols)
         return [pd.DataFrame()]  # empty dataframe if terminated
 
-    def next(self, eval):
+    def next(self, accuracy_result):
         """
-        Perform GA to the next generation
+        Perform GA to produce the next generation
         """
 
-        # TODO - fitness function evaluation
         def _select():
             # if current individual of population fails the fitness function, then update the element
             for i, subset in enumerate(self._subset):
-                if fitness(eval) <= eval:
+                if self.fitness(subset, accuracy_result[i]) > self.fitness_opt:
                     self._subset[i] = map(lambda x: 1 if x > 0.5 else 0, [random() for _ in range(len(self.df.columns))])
 
         def _crossover():
             # exchange the value of two adjacent individuals
-            pr_crossover = 0.05
+            pr_crossover = GA_PARA["PR_CROSSOVER"]
             for i in range(1, len(self._subset)):
                 if random() < pr_crossover:
                     # produces two children with half subsets exchanged
@@ -67,7 +76,7 @@ class Population(object):
 
         def _mutate():
             # each element of the subset has a chance to flip the binary value
-            pr_mutate = 0.01
+            pr_mutate = GA_PARA["PR_MUTATE"]
             for i in range(len(self._subset)):
                 new_subset = []
                 for feature in self._subset[i]:
@@ -81,40 +90,10 @@ class Population(object):
             # if termination is reached, then return True
             return self._gen_num >= self._gen_max
 
-        # TODO
-        # fitness(x) = accuracy(x) - cost(x)/(accuracy(x) + 1) + cost_max
-        fitness = lambda x: eval
         if _terminate():
             self._subset = []
         else:
             _select()
             _crossover()
             _mutate()
-        self._gen_num += 1
-
-"""
-Example
-Instruction of using GA on the dataset.
-$ python ga.py
-"""
-# read data and initialize an instance of dataset
-population = Population(pd.read_csv("gender_age_train.csv", sep=","))
-# results
-result = {}
-# naive SVM model
-run_SVM = lambda df: random()
-# start simulation
-for i in range(100):
-    if population.active():
-        # return subset data, DataFrame
-        df_groups = population.get()
-        # for each individual in population
-        result[i] = []
-        for df in df_groups:
-            # SVM output, accuracy
-            output = run_SVM(df)
-            result[i].append(output)
-        # run next generation in the GA process, does not return anything
-        population.next(output)
-# print results
-print result
+            self._gen_num += 1
