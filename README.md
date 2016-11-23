@@ -3,74 +3,53 @@
 
 ### Introduction
 
-This site is for the final project of Optimization class (CS 268). The goal is to predict every new user's group based on mobile device tracking data. Data and idea was originally from [Kaggle](https://www.kaggle.com/c/talkingdata-mobile-user-demographics). Particularly, this project will focus on the feature engineering using genetic algorithm before get into the stage of fitting a machine learning model. For dynamic and reporting purposes, please visit [TODO-DONT-CLICK]() for more details.
-
-
-Also, for the purpose of data engineering, all csv data was imported into MySQL. There are six major tables providing user demographics data. Largest table `app_events` has more than 32,000,000 rows. 
+This site is for the final project of Optimization class (CS 169/268). The goal is to predict every new user's group based on mobile device tracking data. Data and idea was originally from [Kaggle](https://www.kaggle.com/c/talkingdata-mobile-user-demographics). Particularly, this project will focus on the feature engineering using genetic algorithm before get into the stage of fitting a machine learning model. For dynamic and reporting purposes, please visit [TODO-DONT-CLICK]() for more details.
 
 
 ### Timeline and Roadmap
 See [here](https://docs.google.com/a/uci.edu/document/d/1xQiWP9X7VLAKUyM-ZTwjswcypflQY--bUXnz1qTLpI0/edit?usp=sharing) on Google Doc.
 
 
-### Environmental Settings
+#### Git
+To make a copy of this project in your laptop, you will need to use `git` command line tool. See [here](https://confluence.atlassian.com/bitbucketserver/basic-git-commands-776639767.html) for basic commands.
 
-#### MySQL
-
-You should set `mysql` as a global variable and do not set any password for the user `root`. To change the password, run
-
-```
-$ mysql>SET PASSWORD FOR 'root'@'localhost' = PASSWORD('MyNewPass');
-```
-
-To test if you `MySQL` is ready, run
+Check out this repository (public)
 
 ```
-$ mysql -uroot 
-```
-
-#### Python Module
-
-To install MySQLdb (a Python module), run
-
-```
-$ pip install mysql-python
+$ git clone https://github.com/y5yeyey/opt-project.git
 ```
 
 
-#### Import Data to MySQL
+### Architecture
 
-Download the .csv files from Kaggle, then placed all of them under the `data/` directory. Enter the `data/` directory,
+#### Overview
 
-```
-$ cd path/to/opt-project/data
-```
- 
-Run
+The `main.py` calls everything in this project. Note that `Python2.7` is used in this project. Other `.py` files cannot contain the following part:
 
-```
-$ ./load_data.sh
+```python
+if __name__ == "__main__":
+	pass
 ```
 
-to complete the loading process. If the password for `root` user is not empty, then you will need to change the `load_data.sh` script manually to make it work. Basically, the `load_data.sh` first run `sql.py` to generate `.sql` scripts for each of the `.csv` data files (any existed `.sql` will be overwrote), then run `.sql` scripts one by one. The whole process probably cost five mins to finish.
+Also, every `.py` file should be in the same directory as the `main.py`.
 
+Given a finalized dataset `data.csv`, we will run the program via
 
-### Test
-
-To test a MySQL interface, run
-
-```
-$ python test.py
+```shell
+$ python main.py --data data.csv
 ```
 
-You can modify the connection settings in `test.py`, which is defined as
+#### Components
 
-```
-test = {
-    "HOST": "localhost",
-    "DB": "talkingdata",
-    "USER": "root",
-    "PWD": ""
-}
-```
+##### Engine/Driver
+The `main.py` is responsible for controlling the data flow (input dataset in `.csv` and output dataset in `.csv`), triggering algorithms in simulations, and producing numerical results (in `.csv`).
+
+##### Visualizer
+Visualizations (and all preprocessing steps) are in `R`.Results are consisted of a `.csv` dataset and plots. Data flows in `.csv` files between `Python` and `R`.
+
+##### Algorithm
+Algorithms include Genetic Algorithm (GA) and Support Vector Machine (SVM), provided by `ga.py` and `svm.py` respectively. GA is a function giving a subset of features, and pass the subset to the model fitter SVM. Each simulation calls GA and SVM iteratively to get simulation results. 
+
+##### Analyzer
+Analyzer provides an overall performance analysis on the simulation. Analyzer can be either in `R` or `Python`. If the analyzer is implemented in `R`, then `.csv` file should be loaded. If the analyzer is a `.py` file, then it will be called in the `main.py`.
 
