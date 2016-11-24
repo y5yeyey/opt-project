@@ -25,38 +25,31 @@ class SvmClassifier(object):
 
     def train(self, X, Y, options=None):
         """
-        X, Y is the the input
-        """
+        -s svm_type : set type of SVM (default 0)-----C-SVC
+        -t kernel_type : set type of kernel function (default 2)
+        -g  gamma : set gamma in kernel function (default 1/num_features)
+        -c penalty cost  default 1        """
         m = svm_train(Y, X, options);
         return m;
 
     def predict(self, Xte, Yte, m):
         p_label, p_acc, p_val = svm_predict(Yte, Xte, m)
         res = {}
-        res['acc'] = 0.1
-        res['auc'] = 0.2
-        res['err'] = 0
+        res['acc'] = p_acc[0]
+        res["mse"] = p_acc[1]
+        res["predict_res"] = p_label
         return res;
 
-    def roc(self):
-        pass
-
-    def auc(self):
-        pass
-
-    def err(self):
-        pass
-
-
 svm = SvmClassifier()
-
 Y = [0, 1, 0, 1]
 X = [[1, 2, 3, 4], [2, 3, 4, 5], [1, 2, 4, 5], [1, 2, 6, 5]]
-prob_x, prob_y = svm.transform(X, Y)
-print isinstance(prob_x, (list, tuple))
-m = svm.train(prob_y[:3], prob_x[:3], '-c 4')
-# print prob_x[3:]
-# predict = svm.predict(prob_y, prob_x, m)
+prob_x, prob_y = svm.parse(X, Y)
+m = svm.train(prob_x, prob_y, '-g 0.01 -c 0.1')
+predict = svm.predict(prob_x, prob_y, m)
+
+print predict
+
+
 
 # print predict
 # y, x = svm_read_problem('data/iris.scale.txt')
