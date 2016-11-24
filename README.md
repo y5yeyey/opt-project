@@ -53,7 +53,7 @@ We implement svm.py by extending libsvm. svm.py provides functions includes: par
 
 1. parse data into libsvm style
 2. call train function to get trained model
-3. invoke predict function to make predicatios
+3. invoke predict function to make predications
 4. performance analysis
 
 ##### Analyzer
